@@ -5,7 +5,11 @@ import { Web3Storage } from 'web3.storage'
 import { WEB3_TOKEN, FILE_ENCRYPTKEY } from "./CONSTANTS";
 
 const client = new Web3Storage({ token: WEB3_TOKEN });
-
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
 const fetchWeb3StorageClient = () => {
         return Promise.resolve(client)
 }
@@ -40,4 +44,4 @@ const fetchWeb3StorageClient = () => {
         }
     };
 }
-export { UploadImages, fetchWeb3StorageClient }
+export { UploadImages, fetchWeb3StorageClient, getCookie }
