@@ -45,14 +45,20 @@ function SignupCard() {
       user.getIdToken().then((idToken) => {
         console.log("IDTOKEN ",JSON.stringify({ idToken }));
 
-        return fetch("https://40.113.171.199:8443/sessionLogin", {
+        return fetch("https://40.113.171.199:8443/sessionSignup", {
           method: "POST",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json"
           },
           body: JSON.stringify({ idToken }),
-        });
+        }).then((resp)=>{
+            console.log(resp);
+            if(resp.status ==='success'){
+              signOut();
+              history.push("/encryptionMethod");
+            }
+        })
     }).then(() => {
     
       return signOut();
