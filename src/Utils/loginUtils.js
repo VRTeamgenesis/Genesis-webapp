@@ -7,7 +7,8 @@ const FIREBASE_CONFIG = {
     storageBucket: "test-bdf0c.appspot.com",
     messagingSenderId: "116123758394",
     appId: "1:116123758394:web:7459c3fed632c2b8f46a03",
-    measurementId: "G-DMGXKD92HR"
+    measurementId: "G-DMGXKD92HR",
+    databaseURL: "https://test-bdf0c-default-rtdb.firebaseio.com/"
 }
 
 const firebaseApp = initializeApp(FIREBASE_CONFIG);

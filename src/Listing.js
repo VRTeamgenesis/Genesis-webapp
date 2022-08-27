@@ -6,89 +6,100 @@ import { NavBar } from "./Components/Navbar";
 import { useAppContext } from "./context";
 import { UploadImageBoy } from "./images/UploadImageBoy";
 import { subscribe, unsubscribe } from "./Utils/events";
-import { firebaseAuth } from "./Utils/loginUtils";
-import {Link as RouterLink, useNavigate} from 'react-router-dom'
-
+import { firebaseApp, firebaseAuth } from "./Utils/loginUtils";
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { getDatabase, ref, child, get } from "firebase/database";
+import { initFiles } from './Utils/processUtils';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Listing() {
     const history = useNavigate();
-    const { list,setList } = useAppContext();
-    const setImageList = useCallback(({detail})=>{
-        setList((prev)=>{
+    const { list, setList } = useAppContext();
+    const setImageList = useCallback(({ detail }) => {
+        setList((prev) => {
             return [...prev, detail]
         });
-    },[setList]);
-    useEffect(()=>{
-        subscribe("initalImages",setImageList);
-        return (()=>{
-            unsubscribe("initalImages",setImageList);
+    }, [setList]);
+    useEffect(() => {
+        subscribe("initalImages", setImageList);
+        return (() => {
+            unsubscribe("initalImages", setImageList);
         })
-    },[setImageList]);
-    useEffect(()=>{debugger;
-        if(!firebaseAuth.currentUser){
-            history("/signin");
-        }else { 
-            debugger;
-            firebaseAuth.currentUser.getIdToken().then((idToken)=>{
-                console.log(idToken)
-                fetch("https://40.113.171.199:8443/api/data/list", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ idToken}),
-        }).then(()=>{
-            
-        })
-            });
-        }
-    },[])
-    return (
-        <>
-            <NavBar />
-            {
-                list.length !== 0 &&
-                <Flex
-                    minH={'calc(100vh - 90px)'}
-                    align={'center'}
-                    justify={'center'}
-                    alignItems={'flex-start'}
-                >
+    }, [setImageList]);
+    useEffect(() => {
+        const auth = getAuth();
+        onAuthStateChanged(auth, (user) => {
 
-                    <Stack spacing={2} mx={'auto'} maxW={'900px'}>
 
-                        <Masonry breakpointCols={3}
-                            className="my-masonry-grid"
-                            columnClassName="my-masonry-grid_column">
-                            {list.map((item, index) => (
 
-                                <img
-                                    src={item.img}
-                                    alt={item.title}
-                                    loading="lazy"
-                                    
-                                    style={{
-                                        borderBottomLeftRadius: 4,
-                                        borderBottomRightRadius: 4,
-                                        display: 'block',
-                                        width: '100%',
-                                        padding: '2px'
-                                    }}
-                                />
+            console.log(firebaseAuth)
+            if (!user) {
+                history("/signin");
+            } else {
+                // firebaseAuth.currentUser.getIdToken().then((idToken) => {
 
-                            ))}
-                        </Masonry>
+                // fetch("https://40.113.171.199:8443/api/data/list", {
+                //     method: "POST",
+                //     headers: {
+                //         Accept: "application/json",
+                //         "Content-Type": "application/json"
+                //     },
+                //     body: JSON.stringify({ idToken }),
+                // }).then((resp) => {
+                //     console.log(resp);
+                // })
 
-                    </Stack>
-                </Flex>
+
+                // });
             }
-            {
-                list.length === 0 &&
-                <>
-                <Flex  align={'center'} py={10} 
+        })
+    
+}, [firebaseAuth])
+return (
+    <>
+        <NavBar />
+        {
+            list.length !== 0 &&
+            <Flex
+                minH={'calc(100vh - 90px)'}
+                align={'center'}
+                justify={'center'}
+                alignItems={'flex-start'}
+            >
+
+                <Stack spacing={2} mx={'auto'} maxW={'900px'}>
+
+                    <Masonry breakpointCols={3}
+                        className="my-masonry-grid"
+                        columnClassName="my-masonry-grid_column">
+                        {list.map((item, index) => (
+
+                            <img
+                                src={item.img}
+                                alt={item.title}
+                                loading="lazy"
+
+                                style={{
+                                    borderBottomLeftRadius: 4,
+                                    borderBottomRightRadius: 4,
+                                    display: 'block',
+                                    width: '100%',
+                                    padding: '2px'
+                                }}
+                            />
+
+                        ))}
+                    </Masonry>
+
+                </Stack>
+            </Flex>
+        }
+        {
+            list.length === 0 &&
+            <>
+                <Flex align={'center'} py={10}
                     justify={'center'} direction='column'>
-                  <Center>
-                        <Heading lineHeight='tall'py='10' cursor={'pointer'} onClick={()=>{
+                    <Center>
+                        <Heading lineHeight='tall' py='10' cursor={'pointer'} onClick={() => {
                             document.getElementById("uploadBtn").click();
                         }}>
                             <Highlight
@@ -98,16 +109,16 @@ function Listing() {
                                 Upload Files
                             </Highlight>
                         </Heading>
-                   </Center>
+                    </Center>
                     <Box w='md' h={'md'}>
-                   
+
                         <UploadImageBoy />
                     </Box>
-                    </Flex>
-                </>
-            }
+                </Flex>
+            </>
+        }
 
-        </>
-    );
+    </>
+);
 }
 export { Listing }
