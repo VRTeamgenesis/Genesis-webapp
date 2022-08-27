@@ -20,7 +20,7 @@ import { useState, useCallback, useRef } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import { initializeApp } from 'firebase/app';
 import { FIREBASE_CONFIG } from './Utils/CONSTANTS';
-import { getAuth, createUserWithEmailAndPassword,signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 
 const firebaseApp = initializeApp(FIREBASE_CONFIG);
 const firebaseAuth = getAuth(firebaseApp);
@@ -29,6 +29,7 @@ function SignupCard() {
 
   const history = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [name, setName] = useState("unfold2022");
   const [email, setEmail] = useState('test@unfold2022.com');
   const [password, setPassword] = useState("unfawpeokwqepo");
   const emailRef = useRef(null);
@@ -41,9 +42,9 @@ function SignupCard() {
       alert("Password should be of minimum length 5");
       return;
     }
-    createUserWithEmailAndPassword(firebaseAuth, email, password).then(({user})=>{
+    createUserWithEmailAndPassword(firebaseAuth, email, password).then(({ user }) => {
       user.getIdToken().then((idToken) => {
-        console.log("IDTOKEN ",JSON.stringify({ idToken }));
+        console.log("IDTOKEN ", JSON.stringify({ idToken, userName: "" }));
 
         return fetch("https://40.113.171.199:8443/sessionSignup", {
           method: "POST",
@@ -51,27 +52,27 @@ function SignupCard() {
             Accept: "application/json",
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ idToken }),
-        }).then((resp)=>{
-            console.log(resp);
-            if(resp.status ==='success'){
-              signOut();
-              history.push("/encryptionMethod");
-            }
+          body: JSON.stringify({ idToken, userName: name }),
+        }).then((resp) => {
+          console.log(resp);
+          if (resp.status === 'success') {
+            signOut();
+            history.push("/encryptionMethod");
+          }
         })
-    }).then(() => {
-    
-      return signOut();
-    })
-    .then(() => {
-      console.log("Nav to home");
-      history.push("/listing");
-    });
-  },(msg)=>{
-    alert(msg)
-  })
+      }).then(() => {
 
-  }, [password, email, history])
+        return signOut();
+      })
+        .then(() => {
+          console.log("Nav to home");
+          history.push("/listing");
+        });
+    }, (msg) => {
+      alert(msg)
+    })
+
+  }, [password, email, history, name])
   return (
     <Flex
       minH={'100vh'}
@@ -97,7 +98,9 @@ function SignupCard() {
               <Box>
                 <FormControl id="firstName" isRequired>
                   <FormLabel>First Name</FormLabel>
-                  <Input type="text" />
+                  <Input type="text" value={name} onChange={(event) => {
+                    setName(event.target.value);
+                  }} />
                 </FormControl>
               </Box>
               <Box>
@@ -116,7 +119,7 @@ function SignupCard() {
             <FormControl id="password" isRequired>
               <FormLabel>Password</FormLabel>
               <InputGroup>
-                <Input type={showPassword ? 'text' : 'password'}value={password} onChange={(event) => {
+                <Input type={showPassword ? 'text' : 'password'} value={password} onChange={(event) => {
                   setPassword(event.target.value);
                 }} />
                 <InputRightElement h={'full'}>
