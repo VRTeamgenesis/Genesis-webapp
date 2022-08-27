@@ -70,7 +70,7 @@ function App() {
       <AppContext.Provider value={context}>
         <BrowserRouter>
           <Routes>
-            <Route path="/listing" element={<Listing />}></Route>
+            <Route path="/" element={<Listing />}></Route>
             <Route path='/signup' element={<SignupCard />}></Route>
             <Route path='/signin' element={<SignIn />}></Route>
             <Route path='/encryptionMethod' element={<AccountSetupMethod />}></Route>
