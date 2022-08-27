@@ -71,10 +71,10 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Listing />}></Route>
-            <Route path='/signup' element={<SignupCard />}></Route>
-            <Route path='/signin' element={<SignIn />}></Route>
-            <Route path='/encryptionMethod' element={<AccountSetupMethod />}></Route>
-            <Route path='/listing' element={<Listing />}></Route>
+            <Route path='/#signup' element={<SignupCard />}></Route>
+            <Route path='/#signin' element={<SignIn />}></Route>
+            <Route path='/#encryptionMethod' element={<AccountSetupMethod />}></Route>
+            <Route path='/#listing' element={<Listing />}></Route>
           </Routes>
         </BrowserRouter>
       </AppContext.Provider>

@@ -92,7 +92,7 @@ import {
               </Stack>
               <Stack pt={6}>
                 <Text align={'center'}>
-                  Already a user?<RouterLink to='/signin'><Link color={'blue.400'}>Login</Link></RouterLink> 
+                  Already a user?<RouterLink to='/#signin'><Link color={'blue.400'}>Login</Link></RouterLink> 
                 </Text>
               </Stack>
             </Stack>
