@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 import {
   Flex,
@@ -15,11 +15,30 @@ import {
   Text,
   useColorModeValue
 } from '@chakra-ui/react';
+import {  signInWithEmailAndPassword } from "firebase/auth";
+
+import {Link as RouterLink, useNavigate} from 'react-router-dom'
+import { firebaseAuth } from "./Utils/loginUtils";
 
 
-import {Link as RouterLink} from 'react-router-dom'
 function SignIn() {
+  const [email,setEmail] = useState("");
+  const [password,setPassword] = useState("");
+  const emailRef =useRef();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
+  const onSignIn = useCallback(()=>{
+    if(!emailRef.current.validity.valid){
+      alert("Please check the email id, format may be wrong");
+    }else{
+      setIsLoading(true);
+      signInWithEmailAndPassword(firebaseAuth, email,password).then((user)=>{
+        navigate('/listing');
+      });
+    }
+  },[email,password,firebaseAuth]);
+  
     return (
      
         <Flex
@@ -42,11 +61,15 @@ function SignIn() {
               <Stack spacing={4}>
                 <FormControl id="email">
                   <FormLabel>Email address</FormLabel>
-                  <Input type="email" />
+                  <Input type="email" ref={emailRef} value={email} onChange={(event)=>{
+                      setEmail(event.target.value);
+                  }}/>
                 </FormControl>
                 <FormControl id="password">
                   <FormLabel>Password</FormLabel>
-                  <Input type="password" />
+                  <Input type="password"  value={password} onChange={(event)=>{
+                      setPassword(event.target.value);
+                  }}/>
                 </FormControl>
                 <Stack spacing={10}>
                   <Stack
@@ -57,6 +80,8 @@ function SignIn() {
                     <RouterLink to='/signup'><Link>Create account</Link></RouterLink>
                   </Stack>
                   <Button
+                  onClick={onSignIn}
+                  isLoading={isLoading}
                     bg={'blue.400'}
                     color={'white'}
                     _hover={{

@@ -5,13 +5,14 @@ import { Search } from "./Search";
 import './Navbar.css';
 import {  UploadImages } from "../Utils/processUtils";
 
-import {Link as RouterLink} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
+import { firebaseAuth } from "../Utils/loginUtils";
 
 
 
 function NavBar() {
     const fileRef = useRef({});
-
+    const history = useNavigate();
 
     useEffect(() => {
         console.log(fileRef.current)
@@ -45,9 +46,14 @@ function NavBar() {
                 <input type={'file'} multiple style={{ display: "none" }} ref={fileRef}></input>
             </Box>
             <Link>
-            <RouterLink to='/signin'>
-            <Button mx={3}>Sign Out</Button>
-            </RouterLink>
+            
+            <Button mx={3} onClick={
+                ()=>{
+                    firebaseAuth.signOut();
+                    history("/signin");
+                }
+            }>Sign Out</Button>
+           
             </Link>
             <img style={{ position: "absolute", top: "-20000px", left: "-20000px" }} id='tfsjs'></img>
         </Flex>

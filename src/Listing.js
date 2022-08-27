@@ -6,8 +6,11 @@ import { NavBar } from "./Components/Navbar";
 import { useAppContext } from "./context";
 import { UploadImageBoy } from "./images/UploadImageBoy";
 import { subscribe, unsubscribe } from "./Utils/events";
+import { firebaseAuth } from "./Utils/loginUtils";
+import {Link as RouterLink, useNavigate} from 'react-router-dom'
 
 function Listing() {
+    const history = useNavigate();
     const { list,setList } = useAppContext();
     const setImageList = useCallback(({detail})=>{
         setList((prev)=>{
@@ -20,6 +23,11 @@ function Listing() {
             unsubscribe("initalImages",setImageList);
         })
     },[setImageList]);
+    useEffect(()=>{
+        if(!firebaseAuth.currentUser){
+            history("/signin");
+        }
+    },)
     return (
         <>
             <NavBar />

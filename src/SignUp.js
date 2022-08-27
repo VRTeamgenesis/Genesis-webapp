@@ -18,12 +18,9 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState, useCallback, useRef } from 'react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-import { initializeApp } from 'firebase/app';
-import { FIREBASE_CONFIG } from './Utils/CONSTANTS';
-import { getAuth, createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { firebaseAuth } from './Utils/loginUtils';
 
-const firebaseApp = initializeApp(FIREBASE_CONFIG);
-const firebaseAuth = getAuth(firebaseApp);
 
 function SignupCard() {
 
@@ -33,15 +30,15 @@ function SignupCard() {
   const [email, setEmail] = useState('test@unfold2022.com');
   const [password, setPassword] = useState("unfawpeokwqepo");
   const emailRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+
   const onSignUp = useCallback(() => {
     if (!emailRef.current.validity.valid) {
       alert("Please enter a valid email id");
       return;
     }
-    if (password.length < 5) {
-      alert("Password should be of minimum length 5");
-      return;
-    }
+    setIsLoading(true);
     createUserWithEmailAndPassword(firebaseAuth, email, password).then(({ user }) => {
       user.getIdToken().then((idToken) => {
         console.log("IDTOKEN ", JSON.stringify({ idToken, userName: "" }));
@@ -55,21 +52,16 @@ function SignupCard() {
           body: JSON.stringify({ idToken, userName: name }),
         }).then((resp) => {
           console.log(resp);
-          if (resp.status === 'success') {
-            signOut();
-            history.push("/encryptionMethod");
-          }
+        }, () => {
+          history("/listing");
         })
       }).then(() => {
 
-        return signOut();
-      })
-        .then(() => {
-          console.log("Nav to home");
-          history.push("/listing");
-        });
+        history("/listing");
+      });
     }, (msg) => {
-      alert(msg)
+      alert('user already present, try sign in');
+      history("/signin");
     })
 
   }, [password, email, history, name])
@@ -140,6 +132,7 @@ function SignupCard() {
                 size="lg"
                 bg={'blue.400'}
                 color={'white'}
+                isLoading={isLoading}
                 _hover={{
                   bg: 'blue.500',
                 }}>
@@ -149,7 +142,7 @@ function SignupCard() {
             </Stack>
             <Stack pt={6}>
               <Text align={'center'}>
-                Already a user?<RouterLink to='/#signin'><Link color={'blue.400'}>Login</Link></RouterLink>
+                Already a user?<RouterLink to='/signin'><Link color={'blue.400'}>Login</Link></RouterLink>
               </Text>
             </Stack>
           </Stack>
