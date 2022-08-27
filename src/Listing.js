@@ -23,11 +23,26 @@ function Listing() {
             unsubscribe("initalImages",setImageList);
         })
     },[setImageList]);
-    useEffect(()=>{
+    useEffect(()=>{debugger;
         if(!firebaseAuth.currentUser){
             history("/signin");
+        }else {
+            debugger;
+            firebaseAuth.currentUser.getIdToken().then((idToken)=>{
+                console.log(idToken)
+                fetch("https://40.113.171.199:8443/api/data/list", {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ idToken}),
+        }).then(()=>{
+            
+        })
+            });
         }
-    },)
+    },[])
     return (
         <>
             <NavBar />
