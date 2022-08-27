@@ -1,0 +1,11 @@
+.header{
+    backdrop-filter: blur(20px);
+    border-style: solid;
+    border-color: #E7EBF0;
+    border-width: 0;
+    border-bottom-width: thin;
+    background: rgba(255,255,255,0.7);
+    color: #2D3843;
+    padding: 12px 6px 12px 6px;
+    margin-bottom: 20px;
+}
