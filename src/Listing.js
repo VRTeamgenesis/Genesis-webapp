@@ -26,7 +26,7 @@ function Listing() {
     useEffect(()=>{debugger;
         if(!firebaseAuth.currentUser){
             history("/signin");
-        }else {
+        }else { 
             debugger;
             firebaseAuth.currentUser.getIdToken().then((idToken)=>{
                 console.log(idToken)
