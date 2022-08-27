@@ -34,7 +34,7 @@ async function initFiles() {
             reader.onload = function () {
               // console.log( CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8))
               // resolve({ img: CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8) });
-              publish("initalImages", { img: CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8) })
+              publish("initalImages", { img: CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8), pos:loop })
             }
             reader.readAsText(blob);
           })
@@ -70,7 +70,7 @@ function App() {
       <AppContext.Provider value={context}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<SignIn />}></Route>
+            <Route path="/listing" element={<Listing />}></Route>
             <Route path='/signup' element={<SignupCard />}></Route>
             <Route path='/signin' element={<SignIn />}></Route>
             <Route path='/encryptionMethod' element={<AccountSetupMethod />}></Route>
