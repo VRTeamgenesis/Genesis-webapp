@@ -43,6 +43,7 @@ function Listing() {
                                     src={item.img}
                                     alt={item.title}
                                     loading="lazy"
+                                    
                                     style={{
                                         borderBottomLeftRadius: 4,
                                         borderBottomRightRadius: 4,

@@ -5,6 +5,7 @@ import { Search } from "./Search";
 import './Navbar.css';
 import {  UploadImages } from "../Utils/processUtils";
 
+import {Link as RouterLink} from 'react-router-dom'
 
 
 
@@ -43,7 +44,11 @@ function NavBar() {
                     }}>Upload</Button>
                 <input type={'file'} multiple style={{ display: "none" }} ref={fileRef}></input>
             </Box>
+            <Link>
+            <RouterLink to='/#signin'>
             <Button mx={3}>Sign Out</Button>
+            </RouterLink>
+            </Link>
             <img style={{ position: "absolute", top: "-20000px", left: "-20000px" }} id='tfsjs'></img>
         </Flex>
     </Box>)
