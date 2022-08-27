@@ -68,16 +68,18 @@ const IMAGE_LIST = [
         title: 'Bike',
     },
 ];
-IMAGE_LIST.length = 0;
-
+IMAGE_LIST.length =0;
 
 const MYWEB3_lIST = [
-    'bafybeifjwmdjjgbyknkrhv6fd3khtf5kykr6og2qmfqxuhdjdzajnm2wu4',
-    'bafybeibiovawvxsrerb3ag3775dlzhbqztjsk65yapf3ldts7qy4tppvde',
-    'bafybeigzbay2g6t5idzih2ukxxv52o2hg3f4atromihnocrwcr2egeptu4',
-    'bafybeiegrerrzej6ierlqepshlvwmkzyy42ht7usti6pnl5ql2pvohchmy'
-   
+    'bafybeibjvzhn45dxscazqlec2ln6jeqa7jcdhfgmsvnmypnoxrvuq6owda',
+    'bafybeicnyepflf2kthuh43io55q3cuc7pdckgojzq5lbjg7cnidsgh3lwu',
+    'bafybeibmnanrsej2h5kxqjawhk7tzu4asnaleflyaaedwgwqwn4nltt4hi',
+    'bafybeid6fxdt4bqkos4qb6e6qhfgpck5rzvvdbnsfm4atmdnwqyqeen4cq',
+    'bafybeigdig4qbon42tpsiwinadjg5mub3ansqpje76427bnputjzvnymfu',
+'bafybeibouofvitn3t6drxmnfwuimob36uf2diognf7uhp5hht2o2tdlpaq',
+'bafybeienrvs2j46tglqkhbuwwinrtlyxganxjfqrize7xhufpz22xpzfhq',
+'bafybeic76yilgargbfwuepbd7h654tl5jhi6w4zvlbecieo4gpsba3wpwe'
 ]
 
-
+console.log(MYWEB3_lIST)
 export { IMAGE_LIST, MYWEB3_lIST };

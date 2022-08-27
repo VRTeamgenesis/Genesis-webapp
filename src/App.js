@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import {
   ChakraProvider,
 } from '@chakra-ui/react';
@@ -14,35 +14,50 @@ import { Listing } from './Listing';
 import { AppContext } from './context';
 import { IMAGE_LIST, MYWEB3_lIST } from './MockupData/mockupInfo';
 import CryptoJS from "crypto-js";
-import { fetchWeb3StorageClient } from './Utils/processUtils';
 import { publish } from "./Utils/events";
-import { FILE_ENCRYPTKEY } from './Utils/CONSTANTS';
+import { FILE_ENCRYPTKEY, WEB3_TOKEN } from './Utils/CONSTANTS';
 
-
+import { Web3Storage } from 'web3.storage'
+const client = new Web3Storage({ token: WEB3_TOKEN });
 async function initFiles() {
   const promisesList = [];
   for (let loop = 0; loop < MYWEB3_lIST.length; loop++) {
-      const web3Client = await fetchWeb3StorageClient();
-      const res = await web3Client.get(MYWEB3_lIST[loop]); // Web3Response
-      const files = await res.files(); // Web3File[]
+    try {
       promisesList.push(new Promise((resolve) => {
-          const blob = new Blob([files[0]], { type: 'text/plain' });
-          var reader = new FileReader();
-          reader.onload = function () {
-              resolve({ img: CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8) });
-          }
-          reader.readAsText(blob);
-      }
-      ))
+        client.get(MYWEB3_lIST[loop]).then((res) => {
+          res.files().then((files) => {
+
+
+            const blob = new Blob([files[0]], { type: 'text/plain' });
+
+            var reader = new FileReader();
+            reader.onload = function () {
+              // console.log( CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8))
+              // resolve({ img: CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8) });
+              publish("initalImages", { img: CryptoJS.AES.decrypt(this.result, FILE_ENCRYPTKEY).toString(CryptoJS.enc.Utf8) })
+            }
+            reader.readAsText(blob);
+          })
+        })
+
+      })
+      
+      )
+    } catch (e) {
+      console.log(e)
+    }
+   
   }
-  Promise.all(promisesList).then((list) => {
-    publish("initalImages", list)
-  })
+  
+  // Promise.all(promisesList).then((list) => {
+  //   console.log(list)
+  //   publish("initalImages", list)
+  // })
 }
 initFiles();
 
 function App() {
-  const [list,setList] = useState(IMAGE_LIST);
+  const [list, setList] = useState(IMAGE_LIST);
 
   const context = {
     list, setList

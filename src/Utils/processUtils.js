@@ -10,7 +10,7 @@ const fetchWeb3StorageClient = () => {
         return Promise.resolve(client)
 }
 
-async function UploadImages(selectedFiles) {
+ function UploadImages(selectedFiles) {
     for (let loop = 0; loop < selectedFiles.length; loop++) {
         var reader = new FileReader();
         reader.readAsDataURL(selectedFiles[loop]);
@@ -18,22 +18,22 @@ async function UploadImages(selectedFiles) {
             const encryptedText = CryptoJS.AES.encrypt(e.target.result, FILE_ENCRYPTKEY).toString();
             const url = URL.createObjectURL(selectedFiles[loop])
             const img = new Image();
-            img.onload = async function () {
-                const model = await mobilenet.load()
-                const prediction = await model.classify(img);
-
+            img.onload =  function () {
+                mobilenet.load().then((model)=>{
+                model.classify(img).then((pred)=>{
+                    console.log(loop);
                 var encryptedTextBlob = new Blob([encryptedText], {
                     type: 'text/plain'
                 });
-                var file = new File([encryptedTextBlob], "name");
-                const web3Client =await fetchWeb3StorageClient();
-                web3Client.put([file], {
+                var file = new File([encryptedTextBlob], 'name');
+                client.put([file], {
                     name: selectedFiles[loop].name,
                     maxRetries: 3,
                 }).then((cid) => {
                     console.log(cid);
-                    console.log(prediction)
                 });
+            })
+            })
 
             }
             img.src = url;

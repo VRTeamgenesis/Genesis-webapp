@@ -10,7 +10,9 @@ import { subscribe, unsubscribe } from "./Utils/events";
 function Listing() {
     const { list,setList } = useAppContext();
     const setImageList = useCallback(({detail})=>{
-        setList(detail)
+        setList((prev)=>{
+            return [...prev, detail]
+        });
     },[setList]);
     useEffect(()=>{
         subscribe("initalImages",setImageList);
