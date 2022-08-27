@@ -45,7 +45,7 @@ function NavBar() {
                 <input type={'file'} multiple style={{ display: "none" }} ref={fileRef}></input>
             </Box>
             <Link>
-            <RouterLink to='/#signin'>
+            <RouterLink to='/signin'>
             <Button mx={3}>Sign Out</Button>
             </RouterLink>
             </Link>
