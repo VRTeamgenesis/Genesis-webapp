@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import './Listing.css'
 import Masonry from "react-masonry-css";
-import { Stack, Flex, Heading, Highlight, Center, Box } from "@chakra-ui/react";
+import { Stack, Flex, Heading, Highlight, Center, Box, useToast } from "@chakra-ui/react";
 import { NavBar } from "./Components/Navbar";
 import { useAppContext } from "./context";
 import { UploadImageBoy } from "./images/UploadImageBoy";
@@ -13,18 +13,31 @@ import { initFiles } from './Utils/processUtils';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Listing() {
     const history = useNavigate();
+    const toast = useToast();
     const { list, setList } = useAppContext();
     const setImageList = useCallback(({ detail }) => {
         setList((prev) => {
             return [...prev, detail]
         });
     }, [setList]);
+    const showToast = useCallback(({detail}) =>{
+  
+        toast({
+            position:'top',
+            title: detail.msg,
+            status: 'success',
+            duration: 3000,
+            isClosable: true,
+          })
+    },[])
     useEffect(() => {
         subscribe("initalImages", setImageList);
+        subscribe("showToast",showToast)
         return (() => {
             unsubscribe("initalImages", setImageList);
+            unsubscribe("showToast",showToast)
         })
-    }, [setImageList]);
+    }, [setImageList,showToast]);
     useEffect(() => {
         const auth = getAuth();
         onAuthStateChanged(auth, (user) => {

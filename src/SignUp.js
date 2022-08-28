@@ -4,6 +4,7 @@ import {
   FormControl,
   FormLabel,
   Input,
+  Highlight,
   InputGroup,
   HStack,
   InputRightElement,
@@ -80,6 +81,15 @@ function SignupCard() {
             to enjoy all of our cool features ✌️
           </Text>
         </Stack>
+        <Box>
+          <Highlight
+          fontSize="18px"
+            query='Intel SGX'
+            styles={{ px: '2', py: '1', rounded: 'full', bg: 'red.100' }}
+          >
+            Your secrets are protected using Intel SGX confidential app
+          </Highlight>
+        </Box>
         <Box
           rounded={'lg'}
           bg={useColorModeValue('white', 'gray.700')}

@@ -6,7 +6,6 @@ import { WEB3_TOKEN, FILE_ENCRYPTKEY } from "./CONSTANTS";
 import { getDatabase, ref, child, get, set } from "firebase/database";
 import { firebaseAuth } from "./loginUtils";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 import { publish } from "./events";
 
 
@@ -15,6 +14,13 @@ function writeUserData(email, cIdArrayList) {
     set(ref(db, 'users/' + email), {
         list: cIdArrayList
     });
+}
+function writeCIdInfo(email,cid, pred){
+    const db = getDatabase();
+    // set(ref(db, 'users/' + email +"cIds").push({
+    //     cid: cid,
+    //     pred:pred
+    // }));
 }
 const client = new Web3Storage({ token: WEB3_TOKEN });
 function getCookie(name) {
@@ -63,7 +69,11 @@ async function initFiles(cIdList) {
 
 
 function UploadImages(selectedFiles) {
+    if (selectedFiles.length > 0) {
+        publish("showToast", { msg: "Uploading Images" });
+    }
     for (let loop = 0; loop < selectedFiles.length; loop++) {
+
         var reader = new FileReader();
         reader.readAsDataURL(selectedFiles[loop]);
         reader.onload = function (e) {
@@ -73,7 +83,7 @@ function UploadImages(selectedFiles) {
             img.onload = function () {
                 mobilenet.load().then((model) => {
                     model.classify(img).then((pred) => {
-                        console.log(loop);
+                       
                         var encryptedTextBlob = new Blob([encryptedText], {
                             type: 'text/plain'
                         });
@@ -96,6 +106,7 @@ function UploadImages(selectedFiles) {
                                         writeUserData(email, [cid])
                                         initFiles([cid])
                                     }
+                                    writeCIdInfo(email,cid,pred)
                                 }).catch((error) => {
                                     console.error(error);
                                 });
@@ -112,20 +123,22 @@ function UploadImages(selectedFiles) {
 function fetchInitialList() {
     const dbRef = ref(getDatabase());
     const auth = getAuth();
-  
+
     const user = auth.currentUser;
     console.log(user);
     onAuthStateChanged(auth, (user) => {
-       
+
         if (user) {
-           
+
             let email = user.email;
-            
+
             email = email.split(".").join("");
 
             get(child(dbRef, `users/${email}`)).then((snapshot) => {
                 if (snapshot.exists()) {
+                    publish("showToast", { msg: "Decrypting Images" });
                     initFiles(snapshot.val().list);
+                    
                 } else {
                     console.log("No data available");
                 }
